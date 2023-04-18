@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const config = {
   entry: './src/index.js',
@@ -7,6 +8,34 @@ const config = {
     filename: 'bundle.js',
   },
   mode: 'development',
+  module: {
+    rules: [
+      {
+        use: 'babel-loader',
+        test: /\.js$/,
+        exclude: /node_modules/,
+      },
+      {
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        test: /\.css$/,
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: { limit: 40000 },
+          },
+          'image-webpack-loader',
+        ],
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: 'style.css',
+    }),
+  ],
 };
 
 module.exports = config;
