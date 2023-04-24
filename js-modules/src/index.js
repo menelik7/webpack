@@ -1,4 +1,13 @@
-import sum from './sum';
-import './image_viewer';
+const button = document.createElement('button');
+button.innerText = 'Click me';
+button.onclick = () => {
+  import('./image_viewer')
+    .then((module) => {
+      return module.default();
+    })
+    .catch((err) => {
+      console.log('chunk loading', err);
+    });
+};
 
-console.log(sum(7, 3));
+document.body.appendChild(button);
