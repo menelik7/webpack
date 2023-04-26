@@ -3,7 +3,7 @@ var path = require('path');
 var htmlWebpackPlugin = require('html-webpack-plugin');
 
 const VENDOR_LIBS = [
-  'faker',
+  '@faker-js/faker',
   'lodash',
   'react',
   'react-dom',
@@ -24,6 +24,12 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: '[name].js',
   },
+  mode: 'development',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
   module: {
     rules: [
       {
@@ -38,9 +44,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
-    }),
     new htmlWebpackPlugin({
       template: './src/index.html',
     }),
