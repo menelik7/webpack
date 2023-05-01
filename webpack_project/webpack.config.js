@@ -15,55 +15,62 @@ const VENDOR_LIBS = [
   'redux-thunk',
 ];
 
-module.exports = {
-  entry: {
-    bundle: './src/index.js',
-  },
-  output: {
-    path: path.join(__dirname, 'dist'),
-    filename: '[name].[chunkhash].js',
-  },
-  mode: 'development',
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      // minSize: 20000,
-      // minRemainingSize: 0,
-      // minChunks: 1,
-      // maxAsyncRequests: 30,
-      // maxInitialRequests: 30,
-      // enforceSizeThreshold: 50000,
-      // cacheGroups: {
-      //   defaultVendors: {
-      //     test: /[\\/]node_modules[\\/]/,
-      //     priority: -10,
-      //     reuseExistingChunk: true,
-      //   },
-      //   default: {
-      //     minChunks: 2,
-      //     priority: -20,
-      //     reuseExistingChunk: true,
-      //   },
-      // },
+module.exports = (env, argv) => {
+  const mode = env.WEBPACK_SERVE ? 'development' : 'production';
+
+  return {
+    entry: {
+      bundle: './src/index.js',
     },
-    runtimeChunk: { name: 'manifest' },
-  },
-  module: {
-    rules: [
-      {
-        use: 'babel-loader',
-        test: /\.js$/,
-        exclude: /node_modules/,
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: '[name].[chunkhash].js',
+    },
+    mode,
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+        // minSize: 20000,
+        // minRemainingSize: 0,
+        // minChunks: 1,
+        // maxAsyncRequests: 30,
+        // maxInitialRequests: 30,
+        // enforceSizeThreshold: 50000,
+        // cacheGroups: {
+        //   defaultVendors: {
+        //     test: /[\\/]node_modules[\\/]/,
+        //     priority: -10,
+        //     reuseExistingChunk: true,
+        //   },
+        //   default: {
+        //     minChunks: 2,
+        //     priority: -20,
+        //     reuseExistingChunk: true,
+        //   },
+        // },
       },
-      {
-        use: ['style-loader', 'css-loader'],
-        test: /\.css$/,
-      },
+      runtimeChunk: { name: 'manifest' },
+    },
+    module: {
+      rules: [
+        {
+          use: 'babel-loader',
+          test: /\.js$/,
+          exclude: /node_modules/,
+        },
+        {
+          use: ['style-loader', 'css-loader'],
+          test: /\.css$/,
+        },
+      ],
+    },
+    plugins: [
+      new htmlWebpackPlugin({
+        template: './src/index.html',
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(mode),
+      }),
     ],
-  },
-  plugins: [
-    new htmlWebpackPlugin({
-      template: './src/index.html',
-    }),
-  ],
+  };
 };
